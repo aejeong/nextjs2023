@@ -1,0 +1,43 @@
+.header-layout{
+  padding:1.5em;
+}
+
+.header-layout .room-box{
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-layout .room-box .logo{
+  vertical-align: middle;
+}
+
+.header-layout .room-name{
+  display: inline-block;
+  color: white;
+  margin-left: 20px;
+  font-weight: 700;
+  font-size: 24px;
+  vertical-align: middle;
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  padding: 2rem;
+  text-align: center;
+}
+
+.main .image-logo{
+  margin: 150px 40px 0;
+}
+
+.bottom-area{
+  position: fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  padding: 2rem;
+  text-align: center;
+}

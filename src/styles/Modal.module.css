@@ -1,0 +1,30 @@
+.backdrop{
+    position:fixed;
+    background-color: rgba(0, 0, 0, 0.5);
+    top:0;
+    left:0;
+    right: 0;
+    bottom:0;
+}
+.modal-container{
+    position: absolute;
+    top:50%;
+    left:0;
+    right: 0;
+    transform: translateY(-50%);
+    max-width: calc(100% - 30px);
+    margin: auto;
+    padding:15px;
+    background-color: #1F1F1F;
+    border-radius: 5px;
+}
+
+.modal-header .close{
+    display: block;
+    margin-left: auto;
+}
+
+.modal-footer{
+    display: flex;
+    padding-top:30px;
+}

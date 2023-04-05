@@ -1,0 +1,23 @@
+.room-list{
+    color: #fff;
+    font-size: 18px;
+}
+
+.room-list .item{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 500;
+    padding: 1.5em;
+    border-bottom: 2px solid #222222;
+}
+
+.room-list .item:first-child{
+    border-top: 2px solid #222222;
+}
+
+.room-list .item-edit{
+    flex: 0 0 70px;
+    font-size: 16px;
+    padding: 10px;
+}
