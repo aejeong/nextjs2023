@@ -4,12 +4,15 @@
 }
 
 .room-list .item{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     font-weight: 500;
     padding: 1.5em;
     border-bottom: 2px solid #222222;
+}
+
+.room-list .item-link{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .room-list .item:first-child{

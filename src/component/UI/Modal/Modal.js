@@ -12,9 +12,6 @@ const Backdrop = ({children}) => {
 const Modal = ({children}) => {
     const modalContext = useContext(ModalContext);
 
-    const updateRoomInfo = () => {}
-    const deleteRoom = () => {}
-
     return <Backdrop>
             <div className={styles['modal-container']}>
                 <div className={styles['modal-header']}>
@@ -26,8 +23,8 @@ const Modal = ({children}) => {
                     {children}
                 </div>
                 <div className={styles['modal-footer']}>
-                    <Button className={commonStyles.error} type="button" onClick={deleteRoom}>삭제</Button>
-                    <Button type="button" onClick={updateRoomInfo}>수정</Button>
+                    <Button className={commonStyles.error} type="button" onClick={modalContext.onDelete}>삭제</Button>
+                    <Button type="button" onClick={modalContext.onEdit.bind(this, children)}>수정</Button>
                 </div>
             </div>
          </Backdrop>

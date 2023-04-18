@@ -5,24 +5,24 @@ import InputWithSend from '../InputWithSend';
 /* Bottom UI Component */
 const Bottom = () => {};
 
-export const homeButtonComponent = ({onClick, children}) => {
+export const HomeButtonComponent = ({...args}) => {
   return(
    <>
-   {buttonComponent({onClick,children})}
+   {ButtonComponent({...args})}
    <a className={commonStyles.link} href="https://platform.openai.com/account/api-keys">KEY 발급 받는 법</a>
    </>
   );
  }
 
-export const buttonComponent = ({onClick, children}) => {
+export const ButtonComponent = ({type = 'button',onClick, children}) => {
    return(
-    <Button type='button' onClick={onClick}>{children}</Button>
+    <Button type={type} onClick={onClick}>{children}</Button>
    );
   }
 
 
-export const sendComponent = ({onClick, placeholder}) => {
-     return <InputWithSend id="send" type="text" placeholder={placeholder} onClick={onClick}/>
+export const SendComponent = ({inputData}) => {
+     return <InputWithSend inputData={inputData}/>
    }
 
 export default Bottom;

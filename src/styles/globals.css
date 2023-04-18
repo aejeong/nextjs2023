@@ -82,8 +82,9 @@
 html,
 body {
   font-family: 'Noto Sans KR', sans-serif;
-  max-width: 100vw;
+  /* max-width: 100vw; */
   overflow-x: hidden;
+  /* min-width: 320px; */
 }
 
 body {

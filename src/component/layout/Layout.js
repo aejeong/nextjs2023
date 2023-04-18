@@ -1,9 +1,9 @@
 import HeaderLayout from './HeaderLayout'
-import BottomAreaLayout from './BottomAreaLayout';
-import React, {useState} from 'react';
+import React, {useState ,useEffect, useRef} from 'react';
 import { CreateRoomUIContext } from '@/context/common-context';
 
 const Layout = ({children}) => {
+    console.log('layout')
     const [roomUIState, setRoomUIState] = useState(false);
 
     const openNewRoomUI = () => {
@@ -12,11 +12,10 @@ const Layout = ({children}) => {
 
     return(
         <CreateRoomUIContext.Provider value={{isActive: roomUIState, onClick:openNewRoomUI}}>
-        <HeaderLayout/>
-        {children}
-        <BottomAreaLayout/>
+            <HeaderLayout/>
+            { children }
         </CreateRoomUIContext.Provider>
     );
 }
 
-export default Layout;
+export default React.memo(Layout);
