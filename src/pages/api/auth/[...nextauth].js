@@ -6,7 +6,6 @@ export default NextAuth({
     session: {
         strategy: 'jwt'
     },
-    secret: process.env.NEXT_PUBLIC_SECRET,
    providers: [
     CredentialsProvider({
         id: 'api-login',
@@ -33,6 +32,7 @@ export default NextAuth({
    pages:{
     signIn: '/'
    },
+   secret: `${process.env.NEXTAUTH_SECRET}`,
    callbacks: {
     async jwt({trigger, session, user, token}){
         if(trigger === 'update' && session){
