@@ -16,8 +16,7 @@ export const verifyAPI = async (api_key) => {
     }
 }
 
-export const requestChat = async (message) => {
-    console.log(message,'---message from request chat')
+export const requestChat = async ({model, message}) => {
     const {user} = await getSession();
     try{
         // v1/chat/completions
@@ -28,9 +27,10 @@ export const requestChat = async (message) => {
                 "Authorization": `Bearer ${user.key}`,
             },
             body : JSON.stringify({
-                // model: 'gpt-3.5-turbo-0301',
-                // messages: [{'role':'user', 'content':`${message}`}],
-                model:'text-davinci-003',
+                model,
+                // model: 'gpt-3.5-turbo',
+                // messages: [{'role':`${role}`, 'content':`${message}`}],
+                // model:'text-davinci-003',
                 prompt: message,
                 temperature:1,
                 max_tokens:60,

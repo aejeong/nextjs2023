@@ -1,29 +1,22 @@
-import styles from '../../styles/List.module.css';
+import styles from '@/styles/List.module.css';
 import layoutStyles from '@/styles/Layout.module.css'
 import Button from '../../component/UI/Button';
 import ModalWithInput from '@/component/ModalWithInput';
 import LabelWithInput from '@/component/LabelWithInput';
-import { useState, useContext, useRef, useEffect, useMemo } from 'react'; 
+import { useState, useContext, useRef, useEffect } from 'react'; 
 import { ModalContext, CreateRoomUIContext } from '@/context/common-context';
 import BottomAreaLayout from '@/component/layout/BottomAreaLayout';
 import { getSession, useSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { checkRoomItemIndex } from '@/lib/common'; 
+import { useRoomEditor } from '@/hooks/roomHooks';
+import { getRandomAttendants, getRandomRole } from '@/lib/common';
+import { useRouter } from 'next/router';
+import { v4 as uuidv4 } from 'uuid';
 
 function Rooms() {
     const router = useRouter();
-    const {data: session , update, status} = useSession();
-
-    console.log(session,'session from rooms')
-
-    useEffect(()=> {
-        getSession().then(session=>{
-            if(status !== 'authenticated' || !session){
-               return router.replace('/')
-            }
-        })
-    },[])
+    const {updateRoomInfo, replaceItem ,deleteRoomInfo} = useRoomEditor();
+    const {data: session, update} = useSession();
 
     const roomUIContext = useContext(CreateRoomUIContext);
     const roomNameRef = useRef(null);
@@ -33,13 +26,24 @@ function Rooms() {
         isOpen: false
     });
 
+    useEffect(()=>{
+        getSession().then(currentSession=>{
+            if(!currentSession){
+                router.replace('/')
+            }else{
+                update({...currentSession})
+            }
+        })
+    },[])
+
 
     const ItemList = () => {
-    if(!session){
-        return;
-    }
-    const { user : { roomItems } } = session;
-    if(status === 'authenticated' && roomItems.length){
+        if(!session){
+            return;
+        }
+    
+    const { roomItems } = session.user;
+    if(roomItems && roomItems.length){
         return roomItems.map((item, idx)=>{
             return(
             <li key={item.id} className={styles.item}>
@@ -65,30 +69,40 @@ function Rooms() {
     }
 
     const createRoomId = () => {
-        const randomId = Math.floor(Math.random() * 10)+1;
-        const hasId = session.user.roomItems.findIndex(item=>{
-           item.id === randomId
-        })
-        if(hasId > 0){
-            return Math.floor(Math.random() * 45)+1;
-        }else{
-            return randomId;
-        }
+        return uuidv4();
+        // const randomId = Math.floor(Math.random() * 10)+1;
+        // const hasId = session.user.roomItems.findIndex(item=>{
+        //    item.id === randomId
+        // })
+        // if(hasId > 0){
+        //     return createRoomId();
+        // }else{
+        //     return randomId;
+        // }
     }
 
     const formHandler = async (event) => {
         event.preventDefault();
         const roomName = roomNameRef.current.value;
         const attendant = attendantRef.current.value;
+
+        if(roomName === '' && attendant === '' ){
+            return;
+        }
+
         const roomId = createRoomId()
+        const randomAttendants = [];
+
+        for(let i = 1; i < Number(attendant); i++){
+            randomAttendants.push({
+                ...getRandomAttendants(),
+                role: getRandomRole()
+            })
+        }
 
         if(session){
-            const newSession = {
-                ...session.user,
-                roomItems : [...session.user.roomItems, {id:roomId,roomName, attendant, chats:[]}]
-            }
-            await update({user: newSession});
-            roomUIContext.isActive = false;
+            updateRoomInfo({id:roomId,roomName, attendant, chats:[], randomAttendants})
+            roomUIContext.onClose();
         }
     }
 
@@ -113,36 +127,12 @@ function Rooms() {
                 chats:[]
             }
 
-            session.user.roomItems.splice(checkRoomItemIndex(),1,item)
+            replaceItem(item)
 
-            const updateRoomInfo = {
-                ...session.user,
-                roomItems : [...session.user.roomItems]
-            }
-            await update({user: updateRoomInfo});
             setOpenRoomEditModal({
                 isOpen: false,
                 currentItem: item
             })
-    }
-
-    const checkRoomItemIndex = () => {
-       return session.user.roomItems.findIndex(item=> {
-            return item.id === openRoomEditModal.currentItem.id
-        })
-    }
-
-    const onDeleteChatRoom = async ()=>{
-        session.user.roomItems.splice(checkRoomItemIndex(),1)
-        const updateRoomInfo = {
-            ...session.user,
-            roomItems : [...session.user.roomItems]
-        }
-        await update({user: updateRoomInfo});
-        setOpenRoomEditModal({
-            isOpen: false,
-            currentItem: null
-        })
     }
 
     const roomListWithModalComponent =  <ModalContext.Provider 
@@ -153,8 +143,11 @@ function Rooms() {
     },
     onEdit: (params)=>{editRoomModalHandler(params)},
     onDelete: ()=>{
-        console.log('from index')
-        onDeleteChatRoom()
+        deleteRoomInfo(openRoomEditModal.currentItem.id)
+        setOpenRoomEditModal({
+            isOpen: false,
+            currentItem: null
+        })
     }
     }}>
     <ul className={styles['room-list']}>

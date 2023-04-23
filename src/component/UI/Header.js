@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import { useState, useContext } from "react";
 import { useSession } from 'next-auth/react';
 import { checkRoomItemIndex } from "@/lib/common";
+import { useRoomEditor } from '@/hooks/roomHooks';
 
 /* Header UI Component */
 const Header = () => {};
@@ -31,9 +32,7 @@ export const DefaultComponent = ({onClick}) => {
    export const RoomComponent = ({onClick, roomName}) => {
     const router = useRouter();
     const [dropdown,setDropdown] = useState();
-    const {data: session , update} = useSession();
-
-    console.log(router,'--router')
+    const {deleteRoomInfo} = useRoomEditor();
 
      return(
          <div className={styles["room-box"]}>
@@ -54,12 +53,9 @@ export const DefaultComponent = ({onClick}) => {
       { dropdown && <DropDownComponent menuList={[{
         name: '방 삭제',
         onClick: async ()=> {
-          session.user.roomItems.splice(checkRoomItemIndex(session.user.roomItems,Number(router.query.roomId)),1)
-          const updateRoomInfo = {
-              ...session.user,
-              roomItems : [...session.user.roomItems]
-          }
-          await update({user: updateRoomInfo});
+          // session.user.roomItems.splice(checkRoomItemIndex(session.user.roomItems,Number(router.query.roomId)),1)
+          
+          deleteRoomInfo(router.query.roomId);
           
           router.replace('/rooms');
         }

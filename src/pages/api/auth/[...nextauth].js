@@ -17,8 +17,6 @@ export default NextAuth({
         },
         async authorize(credentials){
 
-            console.log(credentials,'---credentails')
-
             const auth = await verifyAPI(credentials.key);
 
             if(auth.error){
@@ -58,7 +56,7 @@ export default NextAuth({
         session.user = {
             ...token.user
         }
-        return session;
+        return token;
     }
    }
 });

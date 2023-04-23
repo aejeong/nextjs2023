@@ -10,5 +10,6 @@ export const ModalContext = React.createContext({
 
 export const CreateRoomUIContext = React.createContext({
     isActive : false,
-    onClick: () => {}
+    onClick: ()=>{},
+    onClose: ()=>{}
 });

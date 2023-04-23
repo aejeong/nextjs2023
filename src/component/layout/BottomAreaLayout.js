@@ -2,7 +2,7 @@ import styles from "../../styles/Layout.module.css";
 import { useRouter } from "next/router";
 import { useContext } from "react";
 import dynamic from "next/dynamic";
-import { path } from "@/constant";
+import { PATH } from "@/constant";
 import { CreateRoomUIContext } from "@/context/common-context";
 import { useSession } from "next-auth/react";
 
@@ -12,7 +12,7 @@ const BottomAreaLayout = (props) => {
   const { data: session } = useSession();
 
   const componentPath = {
-    [path.HOME]: (() => {
+    [PATH.HOME]: (() => {
       const HomeButtonComponent = dynamic(() =>
         import("../UI/Bottom").then((module) => module.HomeButtonComponent)
       );
@@ -34,7 +34,7 @@ const BottomAreaLayout = (props) => {
         </HomeButtonComponent>
       );
     })(),
-    [path.ROOMS]: (() => {
+    [PATH.ROOMS]: (() => {
       const ButtonComponent = dynamic(() =>
         import("../UI/Bottom").then((module) => module.ButtonComponent)
       );
@@ -44,7 +44,7 @@ const BottomAreaLayout = (props) => {
         </ButtonComponent>
       );
     })(),
-    [path.ROOM_DETAIL]: (() => {
+    [PATH.ROOM_DETAIL]: (() => {
       const SendComponent = dynamic(() =>
         import("../UI/Bottom").then((module) => module.SendComponent)
       );
