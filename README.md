@@ -20,3 +20,5 @@ Next.JS로 AI 단톡방 만들기(with ChatGPT) (https://www.numble.it/deepdive/
 * 방 생성, 방 나가기, 방 설정 수정
 * 채팅 메시지 보내기, 보낸 메시지에 대한 답장
 * 방 인원이 3명 이상인 경우 본인을 제외한 AI끼리 대화
+
+p.s 아무말이나 뱉는 것 같은 chat ai가 되었다..
