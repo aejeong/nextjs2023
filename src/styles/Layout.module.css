@@ -58,6 +58,7 @@
   max-width: 100px;
   width: 100%;
   transition: .2s;
+  z-index: 1;
 }
 
 .dropdown li{

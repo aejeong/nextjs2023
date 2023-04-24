@@ -70,15 +70,6 @@ function Rooms() {
 
     const createRoomId = () => {
         return uuidv4();
-        // const randomId = Math.floor(Math.random() * 10)+1;
-        // const hasId = session.user.roomItems.findIndex(item=>{
-        //    item.id === randomId
-        // })
-        // if(hasId > 0){
-        //     return createRoomId();
-        // }else{
-        //     return randomId;
-        // }
     }
 
     const formHandler = async (event) => {

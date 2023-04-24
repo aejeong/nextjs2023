@@ -5,7 +5,7 @@ import { ROLE } from '@/constant';
 import { useChat } from '@/hooks/roomHooks';
 
 const RoomPage = () => {
-    const { chatList, sendingMessage, chatStatus} = useChat();
+    const { chatList, sendingMessage, chatStatus, rooms} = useChat();
 
     const chatRef = useRef(null);
     const [timeId, setTimeId] = useState(null);
@@ -20,13 +20,13 @@ const RoomPage = () => {
         }
 
         const result = await sendingMessage(ROLE.USER,userMessage);
-        if(result){
+        if(result && Number(rooms.current.attendant) > 2 ){
             setTimeId(prevTimeId=> chatStatus.timeCheck(prevTimeId ?? null));
         }
     }, [chatRef, sendingMessage, chatStatus])
 
-    const getResponseMessage = useMemo(()=> async () =>{
-        return await sendingMessage(null, chatStatus.currentMessage)
+    const getResponseMessage = useMemo(() => () => {
+        return sendingMessage(null, chatStatus.currentMessage)
     },[sendingMessage, chatStatus.currentMessage])
 
     useEffect(()=>{
@@ -45,25 +45,26 @@ const RoomPage = () => {
         return () => {
             clearTimeout(timeId);
         }
-    },[chatStatus?.botRound, setTimeId])
+    },[chatStatus?.botRound])
 
 
-    const MessageComponent = ({item: {profileType, message, direction}}) => {
-      return (
-        <div className={`${styles['profile-container']} ${styles[`${direction}`]}`}>
-        <div className={styles['profile-box']}>
-            <div className={styles['image-box']}>
-                <img src={profileType.imgPath} alt="user-porofile"/>
+    const MessageComponent = useMemo(()=>{
+        return ({item: {profileType, message, direction}}) => (
+            <div className={`${styles['profile-container']} ${styles[`${direction}`]}`}>
+            <div className={styles['profile-box']}>
+                <div className={styles['image-box']}>
+                    <img src={profileType.imgPath} alt="user-porofile"/>
+                </div>
+                <span className={styles.name}>{profileType.name}</span>
             </div>
-            <span className={styles.name}>{profileType.name}</span>
+       
+            <p className={styles['chat-bubble']}>
+                {message}
+            </p>
         </div>
-   
-        <p className={styles['chat-bubble']}>
-            {message}
-        </p>
-    </div>
-      )
-    }
+          )
+    },[chatList])
+
 
             return <form onSubmit={formHandler}>
             <main className={styles.main}>

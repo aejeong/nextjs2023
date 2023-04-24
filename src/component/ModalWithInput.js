@@ -1,8 +1,7 @@
 import LabelWithInput from '@/component/LabelWithInput';
 import Modal from './UI/Modal/Modal';
 import ReactDOM from 'react-dom';
-import { useEffect, useRef, useContext } from 'react';
-import { ModalContext } from '@/context/common-context';
+import { useEffect, useRef } from 'react';
 
 const ModalWithInput = ({data}) => {
     const roomNameRef = useRef(null);

@@ -36,6 +36,11 @@ export const useRoomEditor = () => {
     }
 }
 
+const _getRandomBot = (randomAttendants) => {
+    const randomKey = getRandomObj(randomAttendants)
+    return randomAttendants[randomKey];
+}
+
 
 export const useChat = () => {
     const router =  useRouter();
@@ -47,11 +52,6 @@ export const useChat = () => {
         current:null,
         index: null
     })
-
-    const getRandomBot = () => {
-        const randomKey = getRandomObj(rooms.current.randomAttendants)
-        return rooms.current.randomAttendants[randomKey];
-    }
 
     const checkEstimateTime = () => {
         return setTimeout(()=>{
@@ -79,12 +79,11 @@ export const useChat = () => {
                     setRooms({
                         current: currentRoom, index: roomIndex
                     })
-
                     if(!chatStatus.hasPreviousChats && currentRoom.chats.length > 0){
                         const { message } = currentRoom.chats[currentRoom.chats.length - 1]
                         setChatList([...currentRoom.chats])
                         return setChatStatus(prev=> {
-                            return {...prev, hasPreviousChats: true, currentMessage: message, botRound: true}
+                            return {...prev, hasPreviousChats: true, currentMessage: message, botRound: Number(currentRoom.attendant) > 2}
                         })
                     }
 
@@ -95,19 +94,19 @@ export const useChat = () => {
 
     },[router.isReady])
 
-    // 대화 저장
-    useEffect(()=>{  
+    const updateChatList = () => {
         if(chatStatus.isListUpdated){
             session.user.roomItems[rooms.index].chats = chatList;
             updateRoomInfo();
 
-            return () =>{
-                setChatStatus(prev=> {
-                    return {...prev, isListUpdated: false}
-                })
-            }
+        setChatStatus(prev=> {
+            return {...prev, isListUpdated: false}
+        })
         }
-    },[chatList])
+    }
+
+    // 대화 저장
+    useEffect(updateChatList,[chatList])
 
 
     const sendingMessage = async (role, incomingMessage) => {
@@ -137,7 +136,7 @@ export const useChat = () => {
                 ])
             })
 
-            const randomBot = getRandomBot();
+            const randomBot = _getRandomBot(rooms.current.randomAttendants);
             
             const result = await requestChat({model:randomBot.model,message: incomingMessage});
           
@@ -158,7 +157,6 @@ export const useChat = () => {
                             ]
                         )
                     })
-
 
                 setChatStatus(prev=> {
                      return { 
@@ -182,6 +180,7 @@ export const useChat = () => {
     return {
         chatList,
         chatStatus,
+        rooms,
         sendingMessage
     }
 }

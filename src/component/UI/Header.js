@@ -2,9 +2,7 @@ import styles from "../../styles/Layout.module.css";
 import TextLogo from "../TextLogo";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useState, useContext } from "react";
-import { useSession } from 'next-auth/react';
-import { checkRoomItemIndex } from "@/lib/common";
+import { useState } from "react";
 import { useRoomEditor } from '@/hooks/roomHooks';
 
 /* Header UI Component */
@@ -53,10 +51,7 @@ export const DefaultComponent = ({onClick}) => {
       { dropdown && <DropDownComponent menuList={[{
         name: '방 삭제',
         onClick: async ()=> {
-          // session.user.roomItems.splice(checkRoomItemIndex(session.user.roomItems,Number(router.query.roomId)),1)
-          
           deleteRoomInfo(router.query.roomId);
-          
           router.replace('/rooms');
         }
       },
