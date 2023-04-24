@@ -25,4 +25,7 @@ Next.JS로 AI 단톡방 만들기(with ChatGPT) (https://www.numble.it/deepdive/
 ### 예시 사이트
 https://astonishing-starlight-5c8315.netlify.app
 
+### 회고 아닌 회고
+https://pick-up-record.tistory.com/entry/%EB%84%98%EB%B8%94-Nextjs%EB%A1%9C-AI-%EB%8B%A8%ED%86%A1%EB%B0%A9-%EB%A7%8C%EB%93%A4%EA%B8%B0-with-ChatGPT
+
 p.s 아무말이나 뱉는 것 같은 chat ai가 되었다..
