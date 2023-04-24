@@ -10,13 +10,12 @@ import { getSession, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useRoomEditor } from '@/hooks/roomHooks';
 import { getRandomAttendants, getRandomRole } from '@/lib/common';
-import { useRouter } from 'next/router';
+import Router from 'next/router';
 import { v4 as uuidv4 } from 'uuid';
 
 function Rooms() {
-    const router = useRouter();
     const {updateRoomInfo, replaceItem ,deleteRoomInfo} = useRoomEditor();
-    const {data: session, update} = useSession();
+    const {data: session} = useSession();
 
     const roomUIContext = useContext(CreateRoomUIContext);
     const roomNameRef = useRef(null);
@@ -29,9 +28,7 @@ function Rooms() {
     useEffect(()=>{
         getSession().then(currentSession=>{
             if(!currentSession){
-                router.replace('/')
-            }else{
-                update({...currentSession})
+                Router.replace('/')
             }
         })
     },[])
@@ -43,6 +40,7 @@ function Rooms() {
         }
     
     const { roomItems } = session.user;
+
     if(roomItems && roomItems.length){
         return roomItems.map((item, idx)=>{
             return(
@@ -77,9 +75,17 @@ function Rooms() {
         const roomName = roomNameRef.current.value;
         const attendant = attendantRef.current.value;
 
-        if(roomName === '' && attendant === '' ){
+        if(roomName === '' && attendant === '' || !session ){
             return;
         }
+    
+        const { roomItems } = session.user;
+
+
+            if(roomItems?.length >= 10){
+                alert('방 생성은 10개를 초과할 수 없습니다.');
+                return roomUIContext.onClose();
+            }
 
         const roomId = createRoomId()
         const randomAttendants = [];
@@ -91,10 +97,8 @@ function Rooms() {
             })
         }
 
-        if(session){
             updateRoomInfo({id:roomId,roomName, attendant, chats:[], randomAttendants})
             roomUIContext.onClose();
-        }
     }
 
     const editRoomModalHandler = async (params) => {

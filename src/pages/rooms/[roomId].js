@@ -3,6 +3,7 @@ import BottomAreaLayout from '@/component/layout/BottomAreaLayout';
 import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import { ROLE } from '@/constant';
 import { useChat } from '@/hooks/roomHooks';
+import Image from 'next/image';
 
 const RoomPage = () => {
     const { chatList, sendingMessage, chatStatus, rooms} = useChat();
@@ -11,7 +12,7 @@ const RoomPage = () => {
     const [timeId, setTimeId] = useState(null);
 
 
-    const formHandler = useCallback(async (event)=> {
+    const formHandler = async(event) => {
         event.preventDefault();
         const userMessage = chatRef?.current?.value;
 
@@ -23,15 +24,15 @@ const RoomPage = () => {
         if(result && Number(rooms.current.attendant) > 2 ){
             setTimeId(prevTimeId=> chatStatus.timeCheck(prevTimeId ?? null));
         }
-    }, [chatRef, sendingMessage, chatStatus])
+    }
 
-    const getResponseMessage = useMemo(() => () => {
+    const getResponseMessage = () => {
         return sendingMessage(null, chatStatus.currentMessage)
-    },[sendingMessage, chatStatus.currentMessage])
+    }
 
     useEffect(()=>{
              // 시간 체크
-        if(chatStatus?.botRound && chatList.length > 1){
+        if(chatStatus.botRound && chatList.length > 1){
 
         (async()=>{
             const result = await getResponseMessage();
@@ -39,31 +40,28 @@ const RoomPage = () => {
                 setTimeId((prevTimeId) => chatStatus.timeCheck(prevTimeId));
             }
         })().then();
-     
         }
 
         return () => {
             clearTimeout(timeId);
         }
-    },[chatStatus?.botRound])
+    },[chatStatus.botRound])
 
 
-    const MessageComponent = useMemo(()=>{
-        return ({item: {profileType, message, direction}}) => (
-            <div className={`${styles['profile-container']} ${styles[`${direction}`]}`}>
-            <div className={styles['profile-box']}>
-                <div className={styles['image-box']}>
-                    <img src={profileType.imgPath} alt="user-porofile"/>
-                </div>
-                <span className={styles.name}>{profileType.name}</span>
+    const MessageComponent =  ({item: {profileType, message, direction}}) => (
+        <div className={`${styles['profile-container']} ${styles[`${direction}`]}`}>
+        <div className={styles['profile-box']}>
+            <div className={styles['image-box']}>
+                <Image src={profileType.imgPath} width="54" height="54" alt="user-porofile"/>
             </div>
-       
-            <p className={styles['chat-bubble']}>
-                {message}
-            </p>
+            <span className={styles.name}>{profileType.name}</span>
         </div>
-          )
-    },[chatList])
+   
+        <p className={styles['chat-bubble']}>
+            {message}
+        </p>
+    </div>
+      )
 
 
             return <form onSubmit={formHandler}>

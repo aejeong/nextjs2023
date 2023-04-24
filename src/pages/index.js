@@ -3,7 +3,7 @@ import LabelWithInput from '@/component/LabelWithInput';
 import Logo from '../component/Logo';
 import React, { useRef, useEffect, useState } from 'react'; 
 import BottomAreaLayout from '@/component/layout/BottomAreaLayout';
-import { useRouter } from 'next/router';
+import Router from 'next/router';
 import { getSession, signIn, useSession } from "next-auth/react"
 
 const LoggedOutComponent = ({inputRef, formHandler}) => {
@@ -30,9 +30,8 @@ const LoggedInComponent = () => {
 }
 const Home = () => {
   const inputRef = useRef(null);
-  const router = useRouter();
   const {update} = useSession();
-  const [isLoggedIn, setIsLoggedIn] = useState(null)
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
 
   useEffect(()=>{
     getSession().then(currentSession=>{
@@ -43,7 +42,7 @@ const Home = () => {
         update({...currentSession})
       }
     })
-  },[router])
+  },[update])
 
   const formHandler = async (event) => {
     event.preventDefault();
@@ -59,7 +58,7 @@ const Home = () => {
     })
 
     if(!verifyResult.error){
-      return router.replace(verifyResult.url);
+      return Router.replace(verifyResult.url);
     }
   }
 

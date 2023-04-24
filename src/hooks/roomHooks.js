@@ -45,7 +45,6 @@ const _getRandomBot = (randomAttendants) => {
 export const useChat = () => {
     const router =  useRouter();
 
-    const { updateRoomInfo } = useRoomEditor();
     const [chatList, setChatList] = useState([])
     const {data: session, update} = useSession();
     const [rooms,setRooms] = useState({
@@ -58,7 +57,7 @@ export const useChat = () => {
         setChatStatus(prev=>{
             return {...prev, botRound: true}
         })
-          },20000)
+          },10000)
      }
      
     const [chatStatus, setChatStatus] = useState({
@@ -86,28 +85,26 @@ export const useChat = () => {
                             return {...prev, hasPreviousChats: true, currentMessage: message, botRound: Number(currentRoom.attendant) > 2}
                         })
                     }
-
-                    update({...currentSession})
                 }             
             })
         }
 
-    },[router.isReady])
+    },[router.isReady, chatStatus.hasPreviousChats, router.query.roomId])
 
-    const updateChatList = () => {
-        if(chatStatus.isListUpdated){
-            session.user.roomItems[rooms.index].chats = chatList;
-            updateRoomInfo();
-
-        setChatStatus(prev=> {
-            return {...prev, isListUpdated: false}
-        })
-        }
-    }
 
     // 대화 저장
-    useEffect(updateChatList,[chatList])
+    useEffect(()=>{  
+        if(chatStatus.isListUpdated){
+            session.user.roomItems[rooms.index].chats = chatList;
+            update({...session});
 
+            return () =>{
+                setChatStatus(prev=> {
+                    return {...prev, isListUpdated: false}
+                })
+            }
+        }
+    },[chatList, chatStatus.isListUpdated, rooms.index, update, session])
 
     const sendingMessage = async (role, incomingMessage) => {
 

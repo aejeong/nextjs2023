@@ -13,7 +13,7 @@ const ModalWithInput = ({data}) => {
 
     return ReactDOM.createPortal(<Modal>
         <LabelWithInput text="방 이름" inputData={{id:'roomName',type:"text",maxLength:'10',defaultValue:data.roomName, ref:roomNameRef}} />
-        <LabelWithInput text="방 인원" inputData={{id:'attendant',type:"number", min:'1', max:'5', defaultValue: data.attendant, ref:attendantRef}}/>
+        <LabelWithInput text="방 인원" inputData={{id:'attendant',type:"number", min:'1', max:'4', defaultValue: data.attendant, ref:attendantRef}}/>
     </Modal>, document.getElementById('portal'))
 
 }
