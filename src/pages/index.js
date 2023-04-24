@@ -59,6 +59,8 @@ const Home = () => {
 
     if(!verifyResult.error){
       return Router.replace(verifyResult.url);
+    }else{
+      return alert('키 입력을 확인해주세요.')
     }
   }
 
